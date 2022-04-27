@@ -7,9 +7,9 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 6969",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 6969"
   },
   "dependencies": {
     "@prisma/client": "3.13.0",
