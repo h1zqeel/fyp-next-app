@@ -1,43 +1,20 @@
-import Layout from '../components/Layout'
-import Post from '../components/Post'
+import { useSession, signIn, signOut } from "next-auth/react"
 
-const Blog = props => {
+export default function Component() {
+  const { data: session } = useSession()
+  if (session) {
+    console.log(session.user);
+    return (
+      <>
+        Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    )
+  }
   return (
-    <Layout>
-      <div className="page">
-        <h1>My Blog</h1>
-        <main>
-          {props.feed.map(post => (
-            <div key={post.id} className="post">
-              <Post post={post} />
-            </div>
-          ))}
-        </main>
-      </div>
-      <style jsx>{`
-        .post {
-          background: white;
-          transition: box-shadow 0.1s ease-in;
-        }
-
-        .post:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .post + .post {
-          margin-top: 2rem;
-        }
-      `}</style>
-    </Layout>
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn('google')}>Sign in</button>
+    </>
   )
 }
-
-export const getServerSideProps = async () => {
-  const res = await fetch('http://localhost:6969/api/feed')
-  const feed = await res.json()
-  return {
-    props: { feed },
-  }
-}
-
-export default Blog
