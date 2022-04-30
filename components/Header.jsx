@@ -1,20 +1,21 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import {signOut} from 'next-auth/react';
+import { useSpring, animated } from 'react-spring'
 
-const Header = (props) => {
+const Header = ({session}) => {
   const router = useRouter()
+  const slideFromTop = useSpring({ to: { opacity: 1, transform: 'translateY(0px)' }, from: { opacity: 0, transform: 'translateY(-250px)' } })
 
   const isActive = (pathname) => router.pathname === pathname
 
-  const {signIn} = props
-  console.log(signIn,'RandomText')
-  if(signIn) 
+  if(session) 
   return(
     <nav>
       <div className="left">
         <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
-            COVID-19
+          <a  data-active={isActive('/')}>
+           Hey, <b>{session.user.name}</b>
           </a>
         </Link>
       </div>
@@ -26,15 +27,14 @@ const Header = (props) => {
           <a data-active={isActive('/contact')}>Contact Us</a>
         </Link>
         <Link href="/create">
-          <a data-active={isActive('/credits')}>Credits</a>
-        </Link>
-        <Link href="/create">
           <a data-active={isActive('/about')}>About Us</a>
+        </Link>
+        <Link href="/">
+          <a data-active={isActive('/')} onClick={signOut}>Sign Out</a>
         </Link>
       </div>
       <style jsx>{`
         nav {
-          background-color: #21325E;
           display: flex;
           padding: 2rem;
           align-items: center;
@@ -45,17 +45,10 @@ const Header = (props) => {
           font-size:20px;
         }
 
-        a {
-          text-decoration: none;
-          color: #000;
-          display: inline-block;
-        }
 
         .left a[data-active='true'] {
           color: gray;
         }
-
-
 
         .right {
           margin-left: auto;
@@ -71,16 +64,17 @@ const Header = (props) => {
 
   return(
     <nav>
-      <div className="left">
-        <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
-            COVID-19
-          </a>
+      <div className="right">
+        <Link href="/signup">
+          <a data-active={isActive('/contact')}>Contact Us</a>
+        </Link>
+        <Link href="/create">
+          <a data-active={isActive('/about')}>About Us</a>
         </Link>
       </div>
       <style jsx>{`
         nav {
-          background-color: #21325E;
+          // background-color: #21325E;
           display: flex;
           padding: 2rem;
           align-items: center;
@@ -99,8 +93,6 @@ const Header = (props) => {
         .left a[data-active='true'] {
           color: gray;
         }
-
-
 
         .right {
           margin-left: auto;

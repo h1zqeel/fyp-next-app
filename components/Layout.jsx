@@ -2,7 +2,7 @@ import Header from './Header'
 
 const Layout = props => (
   <div>
-    <Header  signIn= {props.signIn}/>
+    <Header  session = {props.session}/>
     <div className="layout">{props.children}</div>
     <style jsx global>{`
       html {
