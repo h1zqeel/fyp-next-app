@@ -6,7 +6,7 @@ const Intro = ({session}) => {
 
   return (
     <div className='outer'>
-        <div className='inner lg:mt-44 mt-20 lg:ml-40 '>
+        <div className='inner 2xl:mt-40 xl:mt-36 mt-20 2xl:ml-40 xl:ml-24'>
             <h1>
                 <span className='lg:text-7xl text-5xl font-bold'>Detection Agent</span><br />
                 <span className='mt-5 lg:text-4xl text-2xl font-bold text-red-400' >for Covid 19</span>
