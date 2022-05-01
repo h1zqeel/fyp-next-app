@@ -1,14 +1,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import {signOut} from 'next-auth/react';
-import { useSpring, animated } from 'react-spring'
+import { useSession, signOut } from "next-auth/react"
 
-const Header = ({session}) => {
+const Header = () => {
   const router = useRouter()
-  const slideFromTop = useSpring({ to: { opacity: 1, transform: 'translateY(0px)' }, from: { opacity: 0, transform: 'translateY(-250px)' } })
-
   const isActive = (pathname) => router.pathname === pathname
-
+  const { data: session } = useSession()
   if(session) 
   return(
     <nav>
@@ -20,14 +17,14 @@ const Header = ({session}) => {
         </Link>
       </div>
       <div className="right">
-        <Link href="/drafts">
-          <a data-active={isActive('/hospital')}>Affiliate Hospital</a>
+        <Link href="/hospital/affiliate">
+          <a data-active={isActive('/hospital')} className={isActive('/hospital/affiliate')?'text-cyan-600':''}>Affiliate Hospital</a>
         </Link>
-        <Link href="/signup">
-          <a data-active={isActive('/contact')}>Contact Us</a>
+        <Link href="/contact">
+          <a data-active={isActive('/contact')} className={isActive('/contact')?'text-cyan-600':''}>Contact Us</a>
         </Link>
-        <Link href="/create">
-          <a data-active={isActive('/about')}>About Us</a>
+        <Link href="/about">
+          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600':''}>About Us</a>
         </Link>
         <Link href="/">
           <a data-active={isActive('/')} onClick={signOut}>Sign Out</a>
@@ -65,11 +62,11 @@ const Header = ({session}) => {
   return(
     <nav>
       <div className="right">
-        <Link href="/signup">
-          <a data-active={isActive('/contact')}>Contact Us</a>
+        <Link href="/contact">
+          <a data-active={isActive('/contact')} className={isActive('/contact')?'text-cyan-600':''}>Contact Us</a>
         </Link>
-        <Link href="/create">
-          <a data-active={isActive('/about')}>About Us</a>
+        <Link href="/about">
+          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600':''}>About Us</a>
         </Link>
       </div>
       <style jsx>{`
@@ -106,5 +103,10 @@ const Header = ({session}) => {
     </nav>
   )
 }
-
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+    props: { session }
+  }
+}
 export default Header
