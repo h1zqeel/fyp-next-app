@@ -88,6 +88,7 @@ const handleSubmit = () => {
           })
           .then(function (response) {
             console.log(response);
+            setProcessing(true);
           })
           .catch(function (error) {
             console.log(error);
