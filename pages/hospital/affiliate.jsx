@@ -13,11 +13,7 @@ const axios = require('axios').default;
 const Affiliate =  ({session}) => {
 
 const [next, setNext] = useState(false);
-// const slideFromLeftHide = useTransition(next,{
-//     from: {opacity:1, transform: 'translateX(0px)'},
-//     to: {opacity:0, transform: 'translateX(-250px)'}
-// });
-// const [processing, setProcesing] = useState(false);
+
 
 const slideFromLeft= useSpring({ to: { opacity: 1, transform: 'translateX(0px)' }, from: { opacity: 0, transform: 'translateX(-250px)' } });
 
@@ -98,7 +94,7 @@ const handleSubmit = () => {
 }
 
   return (
-    <Layout>
+    <Layout session={session}>
 
 <div className={processing?'hidden':''}>
       <animated.div className={!next?"page":'next page'} style={slideFromRight} >
@@ -151,7 +147,6 @@ const handleSubmit = () => {
           </a>
         </Link>
 
-       
         {/* <a href="/contact">Contact Us</a><br></br>
         <a href="/test">Take a Test</a><br></br> */}
       </animated.div>
@@ -168,6 +163,9 @@ const handleSubmit = () => {
     </Layout>
   )
 }
+
+export default Affiliate;
+
 export async function getServerSideProps(context) {
     const session = await getSession(context)
 
@@ -180,8 +178,6 @@ export async function getServerSideProps(context) {
       }
     }
     return {
-      props: { session, processing:false }
+      props: { session }
     }
   }
-
-export default Affiliate
