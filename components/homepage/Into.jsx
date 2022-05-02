@@ -1,18 +1,16 @@
 import Link from 'next/link'
-import Router from 'next/router'
-import ReactMarkdown from 'react-markdown'
 
 const Intro = ({session}) => {
 
   return (
     <div className='outer'>
-        <div className='inner 2xl:mt-40 xl:mt-36 mt-20 2xl:ml-40 xl:ml-24'>
+        <div className='inner'>
             <h1>
                 <span className='lg:text-7xl text-5xl font-bold'>Detection Agent</span><br />
                 <span className='mt-5 lg:text-4xl text-2xl font-bold text-red-400' >for Covid 19</span>
             </h1>
             <div className="mt-12">
-                <Link href={session?'/test':'/login'}>
+                <Link href={session?'/test/individual':'/login'}>
                     <span className="btn px-10 py-3 rounded-full text-white cursor-pointer"> {session?'Take Test':'Get Started'}</span>
                 </Link>
             </div>
