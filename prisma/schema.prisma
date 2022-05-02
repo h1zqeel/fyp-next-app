@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:@localhost:3306/fyp"
+  url      = "mysql://bda99e71f43275:9ec0ac25@eu-cdbr-west-02.cleardb.net/heroku_279926f2f0e3767?"
 }
 
 model User {
@@ -24,4 +24,17 @@ model Post {
   viewCount Int      @default(0)
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
+}
+
+model HospitalRequest{
+  id Int @id @default(autoincrement())
+  name String 
+  email String @unique
+  hospitalName String
+  hospitalEmail String
+  plan Int
+  phone String
+  hospitalPhone String
+  why String
+  approved Boolean @default(false)
 }
