@@ -1,11 +1,18 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession, signOut } from "next-auth/react"
+import { useEffect, useState } from 'react'
 
 const Header = () => {
   const router = useRouter()
+  const [approvedHospital,setApprovedHospital] = useState(false);
   const isActive = (pathname) => router.pathname === pathname
   const { data: session } = useSession()
+
+  useEffect(()=>{
+
+  },[]);
+  
   if(session) 
   return(
     <nav>
@@ -17,8 +24,8 @@ const Header = () => {
         </Link>
       </div>
       <div className="right">
-        <Link href="/hospital/affiliate">
-          <a data-active={isActive('/hospital')} className={isActive('/hospital/affiliate')?'text-cyan-600':''}>Affiliate Hospital</a>
+        <Link href={!approvedHospital?"/hospital/affiliate":"/hospital/manage"}>
+          <a data-active={isActive('/hospital')} className={isActive('/hospital/affiliate')||isActive('/hospital/manage')?'text-cyan-600':''}>{!approvedHospital?'Affiliate Hospital':'Manage Hospital'}</a>
         </Link>
         <Link href="/contact">
           <a data-active={isActive('/contact')} className={isActive('/contact')?'text-cyan-600':''}>Contact Us</a>
