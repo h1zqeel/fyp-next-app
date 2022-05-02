@@ -60,7 +60,7 @@ useEffect(async ()=>{
      })
      .then(function (response) {
        setProcessing(response.data.processing);
-    //    setLoading(false);
+       setLoading(false);
      })
      .catch(function (error) {
        console.log(error);
