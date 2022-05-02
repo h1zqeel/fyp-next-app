@@ -9,9 +9,11 @@ import { useEffect, useState } from "react"
 import FileUpload from "react-material-file-upload"
 import Link from "next/link"
 const axios = require('axios').default;
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Affiliate =  ({session}) => {
 
+const [loading, setLoading] = useState(true);
 const [next, setNext] = useState(false);
 
 
@@ -58,6 +60,7 @@ useEffect(async ()=>{
      })
      .then(function (response) {
        setProcessing(response.data.processing);
+    //    setLoading(false);
      })
      .catch(function (error) {
        console.log(error);
@@ -92,7 +95,8 @@ const handleSubmit = () => {
     
     }
 }
-
+if(loading)
+    return <Layout session={session}> <CircularProgress /> </Layout>
   return (
     <Layout session={session}>
 
