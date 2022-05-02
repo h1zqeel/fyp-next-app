@@ -2,7 +2,7 @@ import Header from './Header'
 
 const Layout = props => (
   <div>
-    <Header />
+    <Header session={props.session} />
     <div className="layout 2xl:mt-36 mt-20 2xl:ml-40 xl:ml-24">{props.children}</div>
     <style jsx global>{`
       html {

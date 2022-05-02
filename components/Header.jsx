@@ -1,17 +1,33 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useSession, signOut } from "next-auth/react"
+import { useSession, getSession, signOut } from "next-auth/react"
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-const Header = () => {
+const Header = ({session}) => {
   const router = useRouter()
   const [approvedHospital,setApprovedHospital] = useState(false);
   const isActive = (pathname) => router.pathname === pathname
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
 
   useEffect(()=>{
-
-  },[]);
+    if(session)
+      axios.post('/api/hospital/isApproved',
+      JSON.stringify({
+      email:session.user.email,
+      }),{
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+      })
+      .then(function (response) {
+        setApprovedHospital(response.data.approved);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },[]);
   
   if(session) 
   return(
@@ -109,11 +125,5 @@ const Header = () => {
       `}</style>
     </nav>
   )
-}
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-  return {
-    props: { session }
-  }
 }
 export default Header

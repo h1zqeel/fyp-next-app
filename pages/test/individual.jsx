@@ -1,19 +1,17 @@
 import Layout from "../../components/Layout"
-import { useSession, signOut } from "next-auth/react"
+import { useSession, signOut, getSession } from "next-auth/react"
 import Router from 'next/router'
 import { useEffect } from "react"
 
 
-const Individual = props => {
-    const { data: session } = useSession()
-
+const Individual = ({session}) => {
     useEffect(()=>{
         if(!session){
             return Router.push('/')
         }
     },[])
   return (
-    <Layout>
+    <Layout session={session}>
       <div className="page">
        <p>hospital</p>
       </div>
@@ -26,5 +24,11 @@ const Individual = props => {
   )
 }
 
+export default Individual;
 
-export default Individual
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+    props: { session }
+  }
+}
