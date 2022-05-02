@@ -1,24 +1,27 @@
 import { useState } from "react";
 import Plan from "./plan";
-const Plans = () => {
+const Plans = ({set}) => {
     const [s1,setS1] = useState(false);
     const [s2,setS2] = useState(false);
     const [s3,setS3] = useState(false);
     const select = (id) => {
         switch(id){
             case 1:{
+                set(1);
                 setS1(true);
                 setS2(false);
                 setS3(false);
                 break;
             }
             case 2:{
+                set(2);
                 setS1(false);
                 setS2(true);
                 setS3(false);
                 break;
             }
             case 3:{
+                set(3);
                 setS1(false);
                 setS2(false);
                 setS3(true);
