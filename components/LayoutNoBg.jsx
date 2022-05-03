@@ -1,8 +1,8 @@
 import Header from './Header'
 
-const Layout = props => (
+const LayoutNoBg = props => (
   <div>
-    <Header session={props.session} />
+    <Header session={props.session} admin={props.admin} />
     <div className={!props.admin?"layout 2xl:mt-36 mt-20 2xl:ml-40 xl:ml-24":"layout 2xl:mt-10 2xl:ml-10"}>{props.children}</div>
 
     
@@ -18,7 +18,7 @@ const Layout = props => (
       }
 
       body {
-        background-image: url('/background/bg.jpg');
+        background-color:#ffffff;
         background-size: cover;
         margin: 0;
         padding: 0;
@@ -45,4 +45,4 @@ const Layout = props => (
   </div>
 )
 
-export default Layout
+export default LayoutNoBg
