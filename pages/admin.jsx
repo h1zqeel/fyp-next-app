@@ -1,9 +1,10 @@
 import { faCancel, faCheck, faCheckSquare, faCoffee, faDeleteLeft, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material";
+import { Box, IconButton, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import DetailsModal from "../components/admin/DetailsModal";
 import Layout from "../components/Layout"
 import LayoutNoBg from "../components/LayoutNoBg";
 
@@ -11,7 +12,12 @@ const Admin = ({session}) => {
   
 const [access, setAccess] = useState(false);
 const [requests, setRequests] = useState([]);
-useEffect(async ()=>{
+const [modalOpen, setModalOpen] = useState(false);
+const handleModalOpen = () => setModalOpen(true);
+const handleModalClose = () => setModalOpen(false);
+const [item, setItem] = useState({});
+
+const getRequests = () =>{
   axios.post('/api/is-he-admin',{email:session.user.email
   },{
     headers: {
@@ -26,7 +32,46 @@ useEffect(async ()=>{
       // console.log(requests, 1);
     })
   });
+}
+useEffect(()=>{
+  getRequests();
 },[])
+const approveRequest = (email) => {
+  axios.post('/api/hospital/approve',{
+    email:email
+  },
+  {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then(res => getRequests());
+}
+
+const rejectRequest = (email) => {
+  axios.post('/api/hospital/reject',{
+    email:email
+  },
+  {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then(res => getRequests());
+}
+
+const deleteRequest = (email) => {
+  axios.post('/api/hospital/delete',{
+    email:email
+  },
+  {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then(res => getRequests());
+}
+
 if(!access)
   return <Layout>
     it seems like you dont have access to this page
@@ -68,35 +113,43 @@ if(!access)
                 <TableCell>
                   <div className="flex flex-row">
                   <Tooltip title="View Details">
-                    <IconButton>
+                    <IconButton onClick={()=>{
+                      setItem(item);
+                      handleModalOpen();
+                    }}>
                       <FontAwesomeIcon className="text-base" icon={faEye} />
                     </IconButton>
                   </Tooltip>
                   
                   <Tooltip title="Delete">
-                    <IconButton>
+                    <IconButton onClick={() => deleteRequest(item.email)}>
                       <FontAwesomeIcon className="text-base" icon={faTrash} />
                     </IconButton>
                   </Tooltip>
                   </div>
                 </TableCell>
-                <TableCell>
+                {item.approved==-1?<TableCell>Rejected</TableCell>:<TableCell>
+                  {item.approved==0?<div>
                 <Tooltip title="Approve">
-                    <IconButton>
+                    <IconButton onClick={() => approveRequest(item.email)}>
                       <FontAwesomeIcon className="text-base" icon={faCheckSquare} />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Reject">
-                    <IconButton>
+                    <IconButton onClick={() => rejectRequest(item.email)}>
                       <FontAwesomeIcon className="text-base" icon={faCancel} />
                     </IconButton>
                   </Tooltip>
-                </TableCell>
+                  </div>:'Approved'}
+                </TableCell>}
               </TableRow>))}
             </TableBody>
           </Table>
-          
+
         </TableContainer>
+
+          <DetailsModal modalOpen={modalOpen} handleModalClose={handleModalClose} item={item} approveRequest={approveRequest} rejectRequest={rejectRequest} />
+
         </div>
         <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Prompt:wght@700&display=swap');
