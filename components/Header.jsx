@@ -4,7 +4,8 @@ import { useSession, getSession, signOut } from "next-auth/react"
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-const Header = ({session}) => {
+
+const Header = ({session,admin}) => {
   const router = useRouter()
   const [approvedHospital,setApprovedHospital] = useState(false);
   const isActive = (pathname) => router.pathname === pathname
@@ -35,13 +36,22 @@ const Header = ({session}) => {
       <div className="left">
         <Link href="/">
           <a  data-active={isActive('/')}>
-           Hey, <b>{session.user.name}</b>
+           Hey, <b>{!admin?session.user.name:'Welcome to Admin Panel ' +session.user.name}</b>
           </a>
         </Link>
       </div>
       <div className="right">
+        <Link href="/">
+          <a data-active={isActive('/')} className={isActive('/')?'text-cyan-600':''}>Home</a>
+        </Link>
+        {admin?<Link href={"/admin/add"}>
+          <a className={isActive('/admin/add')?'text-cyan-600':''}>Add Admin</a>
+        </Link>:''}
+        {admin?<Link href={"/admin"}>
+          <a className={isActive('/admin')?'text-cyan-600':''}>Requests</a>
+        </Link>:''}
         <Link href={!approvedHospital?"/hospital/affiliate":"/hospital/manage"}>
-          <a data-active={isActive('/hospital')} className={isActive('/hospital/affiliate')||isActive('/hospital/manage')?'text-cyan-600':''}>{!approvedHospital?'Affiliate Hospital':'Manage Hospital'}</a>
+          <a data-active={isActive('/hospital')} className={isActive('/hospital/affiliate')||isActive('/hospital/manage')?'text-cyan-600':''}>{'Hospital'}</a>
         </Link>
         <Link href="/contact">
           <a data-active={isActive('/contact')} className={isActive('/contact')?'text-cyan-600':''}>Contact Us</a>
@@ -126,4 +136,7 @@ const Header = ({session}) => {
     </nav>
   )
 }
+
+
 export default Header
+

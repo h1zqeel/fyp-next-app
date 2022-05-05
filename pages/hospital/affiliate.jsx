@@ -98,10 +98,44 @@ const handleSubmit = () => {
 }
 if(loading)
     return <Layout session={session}> <CircularProgress /> </Layout>
+if(processing == -1){
+  return <Layout session={session}>
+    <animated.div style={slideFromLeft} className={processing?'':'hidden'}>
+          <div className="text-md">
+          <p className="text-3xl heading mb-5">Your Application was Rejected</p>
+
+        It seems like your request to Affiliate a Hospital was Rejected, we are sorry but<br></br>
+        you dont qualify to be a part of our Hospital Affiliation Program<br></br>
+        If you have any question regarding your application
+        feel free to contact us.<br>
+        </br>
+        Thank You,<br></br>
+        <b className="text-sm">Admin.</b>
+        </div>
+        <Link href="/">
+          <a className="text-slate-500 text-sm mt-10">
+            Go Back
+          </a>
+        </Link>
+
+        {/* <a href="/contact">Contact Us</a><br></br>
+        <a href="/test">Take a Test</a><br></br> */}
+      </animated.div>
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Prompt:wght@700&display=swap');
+        .heading {
+            font-family: 'Prompt'
+        }
+        form, .list-disc, * {
+            font-family: 'Poppins'
+        }
+      `}</style>
+  </Layout>
+}
   return (
     <Layout session={session}>
 
-<div className={processing?'hidden':''}>
+<div className={processing==0?'hidden':''}>
       <animated.div className={!next?"page":'next page'} style={slideFromRight} >
           <p className="text-3xl heading">Please Fill Out the Form Below</p>
        <form className="mt-5 " action="">
@@ -133,7 +167,7 @@ if(loading)
 
       </animated.div>
       </div>
-      <animated.div style={slideFromLeft} className={processing?'':'hidden'}>
+      <animated.div style={slideFromLeft} className={processing==0?'':'hidden'}>
           <div className="text-md">
           <p className="text-3xl heading mb-5">Your Application is being Processed</p>
 
