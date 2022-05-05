@@ -1,6 +1,7 @@
-import { Button, Snackbar, TextField } from "@mui/material"
+import { Button, CircularProgress, Snackbar, TextField } from "@mui/material"
 import axios from "axios"
 import { getSession } from "next-auth/react"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import Layout from "../../components/Layout"
 import LayoutNoBg from "../../components/LayoutNoBg"
@@ -11,7 +12,10 @@ const Add = ({session}) => {
     const [open ,setOpen] = useState(false);
     const [error ,setError] = useState(false);
     const [admins, setAdmins] = useState([]);
+    const [loadingAdmins, setLoadingAdmins] = useState(true);
     const [access, setAccess] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [addingAdmin, setAddingAdmin] = useState(false);
     useEffect(()=>{
         axios.post('/api/isHeAdmin',{email:session.user.email
         },{
@@ -20,6 +24,7 @@ const Add = ({session}) => {
               'Content-Type': 'application/json'
             },
         }).then(res=>{
+            setLoading(false);
             setAccess(res.data.admin);
             getAdmins();
         });
@@ -27,11 +32,14 @@ const Add = ({session}) => {
     const getAdmins = () => {
         axios.get('/api/admin/get').then(res=>{
             setAdmins(res.data);
+            setLoadingAdmins(false);
         })
     }
     const handleAdd = () => {
+      setAddingAdmin(true);
        if(!validateEmail(email)){
            setError(true);
+           setAddingAdmin(false);
            return;
        }
 
@@ -44,23 +52,35 @@ const Add = ({session}) => {
             }}).then(res=>{
             setOpen(true);
             setEmail('');
-            getAdmins();
+            setAdmins([...admins, {email}]);
+            setAddingAdmin(false);
         }).catch(err=>{
             setError(true);
+            setAddingAdmin(false);
+
         })
     }
+    if(loading){
+      return <Layout session={session}>
+        
+        <CircularProgress />
+      </Layout>
+    }
     if(!access)
-        return <Layout>You Dont Have Access to This Page</Layout>
+      return <div className="flex flex-col justify-center h-screen items-center">
+        it seems like you dont have access to this page
+        <Link href="/" ><a>Go Back</a></Link>
+      </div>
     return <LayoutNoBg session={session} admin={true}>
         <div className="flex flex-col  justify-center items-center">
         <div>List of Admins</div>
-        <ul className="list-decimal mb-10">
+        {loadingAdmins?<CircularProgress size='1rem' />:<ul className="list-decimal mb-10">
             {admins.map(admin=>{
                return <li >{admin.email}</li>
             })}
-        </ul>
+        </ul>}
         <TextField label="Email" variant="standard" type={'email'}  value={email} onChange={(e)=>setEmail(e.target.value)} />
-        <Button variant="text" onClick={handleAdd}> Add</Button>
+        {addingAdmin?<CircularProgress size="2rem" />:<Button variant="text" onClick={handleAdd}> Add</Button>}
         </div>
         <Snackbar
         open={open}
