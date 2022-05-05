@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, CircularProgress, IconButton, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
 import { getSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import DetailsModal from "../components/admin/DetailsModal";
 import Layout from "../components/Layout"
@@ -81,14 +82,15 @@ const deleteRequest = (email) => {
   }).then(res => getRequests());
 }
 if(loading){
-  return <Layout>
+  return <Layout session={session}>
     <CircularProgress />
   </Layout>
 }
 if(!access)
-  return <Layout>
-    it seems like you dont have access to this page
-  </Layout>
+  return <div className="flex flex-col justify-center h-screen items-center">
+  it seems like you dont have access to this page
+  <Link href="/" ><a>Go Back</a></Link>
+  </div>
     return <LayoutNoBg session={session} admin={true}>
       <div className="mx-10">
 
