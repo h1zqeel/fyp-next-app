@@ -8,24 +8,6 @@ datasource db {
   url      = "mysql://bda99e71f43275:9ec0ac25@eu-cdbr-west-02.cleardb.net/heroku_279926f2f0e3767?"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
 
 model HospitalRequest{
   id Int @id @default(autoincrement())
@@ -38,15 +20,6 @@ model HospitalRequest{
   hospitalPhone String
   why String
   approved Int @default(0)
-}
-model Admins{
-  id Int @id @default(autoincrement())
-  email String @unique
-}
-
-model Managers{
-  id Int @id @default(autoincrement())
-  email String @unique
 }
 
 model userAdmin {
