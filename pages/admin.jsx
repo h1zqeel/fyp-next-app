@@ -1,6 +1,6 @@
 import { faCancel, faCheck, faCheckSquare, faCoffee, faDeleteLeft, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, IconButton, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Box, CircularProgress, IconButton, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -15,10 +15,11 @@ const [requests, setRequests] = useState([]);
 const [modalOpen, setModalOpen] = useState(false);
 const handleModalOpen = () => setModalOpen(true);
 const handleModalClose = () => setModalOpen(false);
+const [loading, setLoading] = useState(true);
 const [item, setItem] = useState({});
 
 const getRequests = () =>{
-  axios.post('/api/is-he-admin',{email:session.user.email
+  axios.post('/api/isHeAdmin',{email:session.user.email
   },{
     headers: {
         'Accept': 'application/json',
@@ -26,6 +27,7 @@ const getRequests = () =>{
       },
   }).then(res=>{
     setAccess(res.data.admin);
+    setLoading(false);
     axios.post('/api/get-all-requests')
     .then(requests=>{
       setRequests(requests.data);
@@ -71,7 +73,11 @@ const deleteRequest = (email) => {
     }
   }).then(res => getRequests());
 }
-
+if(loading){
+  return <Layout>
+    <CircularProgress />
+  </Layout>
+}
 if(!access)
   return <Layout>
     it seems like you dont have access to this page

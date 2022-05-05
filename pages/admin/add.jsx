@@ -13,7 +13,7 @@ const Add = ({session}) => {
     const [admins, setAdmins] = useState([]);
     const [access, setAccess] = useState(false);
     useEffect(()=>{
-        axios.post('/api/is-he-admin',{email:session.user.email
+        axios.post('/api/isHeAdmin',{email:session.user.email
         },{
           headers: {
               'Accept': 'application/json',
