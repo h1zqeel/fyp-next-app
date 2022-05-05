@@ -17,7 +17,9 @@ const handleModalOpen = () => setModalOpen(true);
 const handleModalClose = () => setModalOpen(false);
 const [loading, setLoading] = useState(true);
 const [item, setItem] = useState({});
-
+const [loadingRequests, setLoadingRequests] = useState(true);
+const [loadingStatus, setLoadingStatus] = useState(false);
+const [deleting, setDeleting] = useState(false);
 const getRequests = () =>{
   axios.post('/api/isHeAdmin',{email:session.user.email
   },{
@@ -31,7 +33,9 @@ const getRequests = () =>{
     axios.post('/api/get-all-requests')
     .then(requests=>{
       setRequests(requests.data);
-      // console.log(requests, 1);
+      setLoadingRequests(false);
+      setLoadingStatus(false);
+      setDeleting(false);
     })
   });
 }
@@ -39,6 +43,7 @@ useEffect(()=>{
   getRequests();
 },[])
 const approveRequest = (email) => {
+  setLoadingStatus(true);
   axios.post('/api/hospital/approve',{
     email:email
   },
@@ -47,10 +52,11 @@ const approveRequest = (email) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }
-  }).then(res => getRequests());
+  }).then(res => {getRequests();});
 }
 
 const rejectRequest = (email) => {
+  setLoadingStatus(true);
   axios.post('/api/hospital/reject',{
     email:email
   },
@@ -59,10 +65,11 @@ const rejectRequest = (email) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }
-  }).then(res => getRequests());
+  }).then(res => {getRequests();});
 }
 
 const deleteRequest = (email) => {
+  setDeleting(true);
   axios.post('/api/hospital/delete',{
     email:email
   },
@@ -87,6 +94,7 @@ if(!access)
 
       
         <h1 className="heading text-2xl">Hospitals: Requests & Approved</h1>
+        {loadingRequests?<div className="flex justify-center"><CircularProgress/></div>:
         <TableContainer>
           <Table>
             <TableHead>
@@ -128,12 +136,13 @@ if(!access)
                   </Tooltip>
                   
                   <Tooltip title="Delete">
-                    <IconButton onClick={() => deleteRequest(item.email)}>
+                    {deleting?<CircularProgress size='2rem'/>:<IconButton onClick={() => deleteRequest(item.email)}>
                       <FontAwesomeIcon className="text-base" icon={faTrash} />
-                    </IconButton>
+                    </IconButton>}
                   </Tooltip>
                   </div>
                 </TableCell>
+                {loadingStatus?<TableCell><CircularProgress size="2rem"/></TableCell>:<>
                 {item.approved==-1?<TableCell>Rejected</TableCell>:<TableCell>
                   {item.approved==0?<div>
                 <Tooltip title="Approve">
@@ -148,11 +157,12 @@ if(!access)
                   </Tooltip>
                   </div>:'Approved'}
                 </TableCell>}
+                </>}
               </TableRow>))}
             </TableBody>
           </Table>
 
-        </TableContainer>
+        </TableContainer>}
 
           <DetailsModal modalOpen={modalOpen} handleModalClose={handleModalClose} item={item} approveRequest={approveRequest} rejectRequest={rejectRequest} />
 

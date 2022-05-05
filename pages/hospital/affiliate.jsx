@@ -14,8 +14,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 const Affiliate =  ({session}) => {
 
 const [loading, setLoading] = useState(true);
+const [submitLoading, setSubmitLoading] = useState(false);
 const [next, setNext] = useState(false);
-
+const [email, setEmail] = useState(session.user.email);
+const [name, setName] = useState(session.user.name);
+const [hospitalName, setHospitalName] = useState('');
+const [hospitalEmail, setHospitalEmail] = useState('');
+const [plan, setPlan] = useState(null);
+const [phone, setPhone] = useState('');
+const [hospitalPhone, setHospitalPhone] = useState('');
+const [why, setWhy] = useState('');
+const [processing, setProcessing] = useState(false);
+const [error, setError] = useState(false);
 
 const slideFromLeft= useSpring({ to: { opacity: 1, transform: 'translateX(0px)' }, from: { opacity: 0, transform: 'translateX(-250px)' } });
 
@@ -31,16 +41,7 @@ const slideNextPage = useSpring({
         transform: 'translateX(50px)'
     }
 });
-const [email, setEmail] = useState(session.user.email);
-const [name, setName] = useState(session.user.name);
-const [hospitalName, setHospitalName] = useState('');
-const [hospitalEmail, setHospitalEmail] = useState('');
-const [plan, setPlan] = useState(null);
-const [phone, setPhone] = useState('');
-const [hospitalPhone, setHospitalPhone] = useState('');
-const [why, setWhy] = useState('');
-const [processing, setProcessing] = useState(false);
-const [error, setError] = useState(false);
+
 const handleNext = () => {
     setError(false);
     if(hospitalName.length !== 0 && plan != null)
@@ -68,6 +69,7 @@ useEffect(async ()=>{
     
 },[])
 const handleSubmit = () => {
+  setSubmitLoading(true);
     if(phone.length && hospitalPhone.length && why.length){
         axios.post('/api/hospital/createRequest',
          JSON.stringify({
@@ -88,7 +90,7 @@ const handleSubmit = () => {
           })
           .then(function (response) {
             console.log(response);
-            setProcessing(true);
+            setProcessing(0);
           })
           .catch(function (error) {
             console.log(error);
@@ -158,12 +160,9 @@ if(processing == -1){
       <CustomInput name={'Hospital Phone*'} state={hospitalPhone} setState={setHospitalPhone}/>
       <CustomInput name={'Why You Want Our Service*'} multiline={true} state={why} setState={setWhy}/>
 
-         
          <div className="w-1/4 mt-5" >
-                <Button variant="outlined"  onClick={handleSubmit}>Submit</Button>
+                {submitLoading?<CircularProgress></CircularProgress>:<Button variant="outlined"  onClick={handleSubmit}>Submit</Button>}
         </div>
-         
-      
 
       </animated.div>
       </div>
