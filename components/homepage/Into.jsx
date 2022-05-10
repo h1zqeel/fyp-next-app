@@ -6,7 +6,7 @@ const Intro = ({session}) => {
     <div className='outer'>
         <div className='inner'>
             <h1>
-                <span className='lg:text-7xl text-5xl font-bold'>Detection Agent</span><br />
+                <span className='lg:text-7xl text-4xl font-bold'>Detection Agent</span><br />
                 <span className='mt-5 lg:text-4xl text-2xl font-bold text-red-400' >for Covid 19</span>
             </h1>
             <div className="mt-12">
@@ -16,7 +16,7 @@ const Intro = ({session}) => {
             </div>
             <div className="mt-12">
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.<br></br> Minima quam repellat laborum aperiam natus repudiandae!
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.<br></br> <div className='lg:mt-0 mt-3'> Minima quam repellat laborum aperiam natus repudiandae!</div>
                 </p>
             </div>
         </div>
