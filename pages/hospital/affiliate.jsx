@@ -10,6 +10,7 @@ import FileUpload from "react-material-file-upload"
 import Link from "next/link"
 const axios = require('axios').default;
 import CircularProgress from '@mui/material/CircularProgress';
+import { validateEmail, validatePhone, validateText } from "../../helpers"
 
 const Affiliate =  ({session}) => {
 
@@ -44,10 +45,11 @@ const slideNextPage = useSpring({
 
 const handleNext = () => {
     setError(false);
-    if(hospitalName.length !== 0 && plan != null)
+    if(hospitalName.length !== 0 && plan != null && (validateEmail(hospitalEmail) || hospitalEmail.length==0) && validateText(hospitalName))
         setNext(!next);
     else
         setError(true);
+
 }
 useEffect(async ()=>{
     axios.post('/api/hospital/requestProcessing',
@@ -69,8 +71,9 @@ useEffect(async ()=>{
     
 },[])
 const handleSubmit = () => {
-  setSubmitLoading(true);
-    if(phone.length && hospitalPhone.length && why.length){
+ 
+    if(phone.length && hospitalPhone.length && why.length && validatePhone(phone) && validatePhone(hospitalPhone)){
+        setSubmitLoading(true);
         axios.post('/api/hospital/createRequest',
          JSON.stringify({
            name,
@@ -95,7 +98,8 @@ const handleSubmit = () => {
           .catch(function (error) {
             console.log(error);
           });
-    
+    } else {
+      setError(true);
     }
 }
 if(loading)
@@ -188,7 +192,7 @@ if(processing == -1){
         {/* <a href="/contact">Contact Us</a><br></br>
         <a href="/test">Take a Test</a><br></br> */}
       </animated.div>
-      <div className="mt-5 text-red-600 text-sm">{error?"* Fields Can't be left Blank":''}</div>
+      <div className="mt-5 text-red-600 text-sm">{error?<div>* Fields Can't be left Blank<br></br>Name should be Alphametic<br></br>Email should be valid<br></br>Phone should follow <i>+923409140288</i></div>:''}</div>
       <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Prompt:wght@700&display=swap');
         .heading {
