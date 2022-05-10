@@ -8,7 +8,7 @@ const Login = props => {
 
   return (
     <Layout>
-      <animated.div style={slideFromRight} className='w-1/4'>
+      <animated.div style={slideFromRight} className='lg:w-1/4'>
         <p className='2xl:text-4xl xl:text-3xl text-2xl font-bold text-red-400 mb-5'>Please Login Below</p>
             <span>
               <FacebookLoginButton onClick={()=>signIn('facebook',{ callbackUrl: `${window.location.origin}/`})} />
