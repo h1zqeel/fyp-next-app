@@ -10,7 +10,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import axios from 'axios';
 
 
-const Individual = ({session}) => {
+const Hospital = ({session}) => {
     const [patientName, setPatientName] = useState('');
     const [date, setDate] = useState(Date(0))
     const [remainingTests, setRemainingTests] = useState(0);
@@ -30,7 +30,7 @@ const Individual = ({session}) => {
          },
      })
      .then(function (response) {
-       setRemainingTests(response.data.remaining);
+       setRemainingTests(parseInt(response.data.remaining));
        setLoadingTests(0);
      })
     },[])
@@ -65,7 +65,7 @@ const Individual = ({session}) => {
             </Button>
         </div>
         <div className="mt-5">
-            <Button variant="outlined" disabled={loadingTests&&remainingTests>0?true:false}>Get Results</Button>
+            <Button variant="outlined" disabled={loadingTests||remainingTests<1?true:false}>Get Results</Button>
         </div>
       </div>
       <style jsx>
@@ -81,7 +81,7 @@ const Individual = ({session}) => {
   )
 }
 
-export default Individual;
+export default Hospital;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

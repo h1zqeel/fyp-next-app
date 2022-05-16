@@ -19,9 +19,33 @@ model HospitalRequest{
   hospitalPhone String
   why String
   approved Int @default(0)
+  tests hospitalTest[]
 }
 
 model userAdmin {
   id Int @id @default(autoincrement())
   email String @unique
+}
+
+model individualTest{
+  id Int @id @default(autoincrement())
+  patientName String
+  patientDOB String
+  result String
+  severity String
+}
+model hospitalTest {
+  id Int @id @default(autoincrement())
+  hospitalRequest HospitalRequest @relation(fields: [hospitalId], references:[id])
+  hospitalId Int
+  patientName String
+  patientDOB DateTime
+  result String
+  severity String
+}
+
+model users {
+  id Int @id @default(autoincrement())
+  email String @unique
+  remainingTests Int @default(3)
 }
