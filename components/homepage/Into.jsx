@@ -1,7 +1,30 @@
+import { CircularProgress } from '@mui/material';
+import axios from 'axios';
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 const Intro = ({session}) => {
-
+    const [isHospital, setIsHospital] = useState(0);
+    const [loading, setLoading] = useState(false);
+    useEffect(async ()=>{
+    if(session){
+    setLoading(true);
+    await axios.post('/api/hospital/isApproved',
+    JSON.stringify({
+     email:session.user.email
+     }),{
+       headers: {
+           'Accept': 'application/json',
+           'Content-Type': 'application/json'
+         },
+     })
+     .then(function (response) {
+       setIsHospital(response.data.approved)
+       setLoading(false);
+       console.log(response);
+     })
+    }
+    },[])
   return (
     <div className='outer'>
         <div className='inner'>
@@ -10,9 +33,11 @@ const Intro = ({session}) => {
                 <span className='mt-5 lg:text-4xl text-2xl font-bold text-red-400' >for Covid 19</span>
             </h1>
             <div className="mt-12">
-                <Link href={session?'/test/individual':'/login'}>
+                {!loading?<>{session?<Link href={isHospital?'/test/hospital':'/test/individual'}>
                     <span className="btn px-10 py-3 rounded-full text-white cursor-pointer"> {session?'Take Test':'Get Started'}</span>
-                </Link>
+                </Link>:<Link href={'/login'}>
+                    <span className="btn px-10 py-3 rounded-full text-white cursor-pointer"> {session?'Take Test':'Get Started'}</span>
+                </Link>}</>:<CircularProgress size={'1.5rem'} />}
             </div>
             <div className="mt-12">
                 <p>
