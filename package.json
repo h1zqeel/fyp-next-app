@@ -47,5 +47,5 @@
   "prisma": {
     "seed": "node prisma/seed.js"
   },
-  "proxy": "https://fyp-flask-app.herokuapp.com"
+  "proxy": "https://fyp-flask-app.herokuapp.com/"
 }

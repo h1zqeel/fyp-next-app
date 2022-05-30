@@ -18,7 +18,7 @@ const Individual = ({session}) => {
     const [uploadedFileName, setUploadedFileName] = useState(null);
     const [testFile, setTestFile] = useState(null);
     const [gettingResult, setGettingResult] = useState(false);
-
+    const [testResult, setTestResult] = useState('');
     const setFile = (e) => {
       if(e.target){
         setUploadedFileName(e.target.files[0].name);
@@ -32,14 +32,18 @@ const Individual = ({session}) => {
         let formData = new FormData();
         formData.append('file', testFile);
         console.log(testFile);
-        await axios.post('https://fyp-flask-app.herokuapp.com/image',
+        await axios.post('/covid_api',
           formData,{
             headers: {
               'Content-Type': 'multipart/form-data',
             }
           })
         .then(function (response) {
-          console.log(response);
+          console.log(response.data);
+          setGettingResult(false);
+          setUploadedFileName(null);
+          setTestFile(null);
+          setTestResult(response.data);
      })
       }
     }
@@ -62,9 +66,19 @@ const Individual = ({session}) => {
        setLoadingTests(0);
      })
     },[])
-  return (
+return testResult.length?  (<div><Layout session={session}>
+  <div className='page'>
+    Patient Name: {patientName}
+    <br></br>
+    Test Result: {testResult!=='No Covid'?'Positive':'Negative'}
+    <br></br>
+    {testResult!=='No Covid'?'Severity: '+testResult:''}
+    <br />
+    <Button variant="outlined" onClick={()=>setTestResult('')}>Take Another</Button>
+  </div>
+  </Layout></div>): (
     <Layout session={session}>
-      <div className="page">
+      <div className="page ">
     <p>Remaining Tests : {loadingTests?<CircularProgress size={'0.8rem'} />:remainingTests}</p>
       <CustomInput name={'Patient Name'} state={patientName} setState={setPatientName}/>
         <div className="mt-5">
@@ -98,6 +112,8 @@ const Individual = ({session}) => {
             {gettingResult?<CircularProgress /> : <Button variant="outlined" onClick={getResults} disabled={loadingTests&&remainingTests>0?true:false}>Get Results</Button>}
         </div>
       </div>
+
+
       <style jsx>
         {`
                     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Prompt:wght@700&display=swap');
