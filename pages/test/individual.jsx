@@ -12,9 +12,37 @@ import axios from 'axios';
 
 const Individual = ({session}) => {
     const [patientName, setPatientName] = useState('');
-    const [date, setDate] = useState(Date(0))
+    const [date, setDate] = useState(0)
     const [remainingTests, setRemainingTests] = useState(0);
     const [loadingTests, setLoadingTests] = useState(0);
+    const [uploadedFileName, setUploadedFileName] = useState(null);
+    const [testFile, setTestFile] = useState(null);
+    const [gettingResult, setGettingResult] = useState(false);
+
+    const setFile = (e) => {
+      if(e.target){
+        setUploadedFileName(e.target.files[0].name);
+        setTestFile(e.target.files[0]);
+      }
+    }
+
+    const getResults = async () => {
+      if(patientName.length && date !== 0 && testFile !== null){
+        setGettingResult(true);
+        let formData = new FormData();
+        formData.append('file', testFile);
+        console.log(testFile);
+        await axios.post('https://fyp-flask-app.herokuapp.com/image',
+          formData,{
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          })
+        .then(function (response) {
+          console.log(response);
+     })
+      }
+    }
     useEffect(async ()=>{
         if(!session){
             return Router.push('/')
@@ -57,15 +85,17 @@ const Individual = ({session}) => {
             variant="contained"
             component="label"
             >
-            Upload CT-Scan
+            {uploadedFileName ? uploadedFileName : 'Upload CT-Scan'}
             <input
             type="file"
+            accept="image/png"
+            onChange={setFile}
             hidden
             />
             </Button>
         </div>
         <div className="mt-5">
-            <Button variant="outlined" disabled={loadingTests&&remainingTests>0?true:false}>Get Results</Button>
+            {gettingResult?<CircularProgress /> : <Button variant="outlined" onClick={getResults} disabled={loadingTests&&remainingTests>0?true:false}>Get Results</Button>}
         </div>
       </div>
       <style jsx>
