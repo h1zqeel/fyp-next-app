@@ -38,7 +38,7 @@ const Manage = ({session}) =>{
                   <TableCell>{new Date(patient.patientDOB).toLocaleDateString('en-GB')}</TableCell>
                   <TableCell>{patient.result}</TableCell>
                   <TableCell>{patient.severity}</TableCell>
-                  <TableCell><a href={'https://detectcovid.tech/hospital/result/'+patient.id} class='text-blue-500' target='_blank'>Link</a></TableCell>
+                  <TableCell><a href={'https://detectcovid.tech/result/hospital/'+patient.id} class='text-blue-500' target='_blank'>Link</a></TableCell>
                 </TableRow>)
               }
             </TableBody>
