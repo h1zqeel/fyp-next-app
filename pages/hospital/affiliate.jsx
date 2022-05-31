@@ -73,7 +73,8 @@ useEffect(async ()=>{
 const handleSubmit = () => {
  
     if(phone.length && hospitalPhone.length && why.length && validatePhone(phone) && validatePhone(hospitalPhone)){
-        setSubmitLoading(true);
+      setError(false);  
+      setSubmitLoading(true);
         axios.post('/api/hospital/createRequest',
          JSON.stringify({
            name,
@@ -192,7 +193,7 @@ if(processing == -1){
         {/* <a href="/contact">Contact Us</a><br></br>
         <a href="/test">Take a Test</a><br></br> */}
       </animated.div>
-      <div className="mt-5 text-red-600 text-sm">{error?<div>* Fields Can't be left Blank<br></br>Name should be Alphametic<br></br>Email should be valid<br></br>Phone should follow <i>+923409140288</i></div>:''}</div>
+      <div className="mt-5 text-red-600 text-sm">{error?<div>* Fields Can't be left Blank<br></br>Name should be Alphametic<br></br>Email should be valid<br></br>Phone should follow <i>+923409140288 or 03409140288</i></div>:''}</div>
       <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Prompt:wght@700&display=swap');
         .heading {

@@ -60,7 +60,7 @@ const Header = ({session,admin}) => {
           <a data-active={isActive('/contact')} className={isActive('/contact')?'text-cyan-600':''}>Contact Us</a>
         </Link>
         <Link href="/about">
-          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600':''}>About Us</a>
+          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600':''}>About</a>
         </Link>
         <Link href="/">
           <a data-active={isActive('/')} onClick={signOut}>Sign Out</a>
@@ -90,7 +90,7 @@ const Header = ({session,admin}) => {
         </Link>
         <br></br>
         <Link href="/about">
-          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600 link':'link'}>About Us</a>
+          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600 link':'link'}>About</a>
         </Link>
         <br></br>
         <Link href="/">
@@ -147,7 +147,7 @@ const Header = ({session,admin}) => {
           <a data-active={isActive('/contact')} className={isActive('/contact')?'text-cyan-600':''}>Contact Us</a>
         </Link>
         <Link href="/about">
-          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600':''}>About Us</a>
+          <a data-active={isActive('/about')} className={isActive('/about')?'text-cyan-600':''}>About</a>
         </Link>
       </div>
       <style jsx>{`

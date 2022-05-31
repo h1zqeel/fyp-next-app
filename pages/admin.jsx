@@ -95,7 +95,7 @@ if(!access)
       <div className="mx-10">
 
       
-        <h1 className="heading text-2xl">Hospitals: Requests & Approved</h1>
+        <h1 className="heading text-2xl">Hospitals: Requests & Approved {loading || deleting || loadingStatus?<CircularProgress size='1rem'></CircularProgress>:''}</h1> 
         {loadingRequests?<div className="flex justify-center"><CircularProgress/></div>:
         <TableContainer>
           <Table>
@@ -138,13 +138,13 @@ if(!access)
                   </Tooltip>
                   
                   <Tooltip title="Delete">
-                    {deleting?<CircularProgress size='2rem'/>:<IconButton onClick={() => deleteRequest(item.email)}>
+                   <IconButton onClick={() => deleteRequest(item.email)}>
                       <FontAwesomeIcon className="text-base" icon={faTrash} />
-                    </IconButton>}
+                    </IconButton>
                   </Tooltip>
                   </div>
                 </TableCell>
-                {loadingStatus?<TableCell><CircularProgress size="2rem"/></TableCell>:<>
+                <>
                 {item.approved==-1?<TableCell>Rejected</TableCell>:<TableCell>
                   {item.approved==0?<div>
                 <Tooltip title="Approve">
@@ -159,7 +159,7 @@ if(!access)
                   </Tooltip>
                   </div>:'Approved'}
                 </TableCell>}
-                </>}
+                </>
               </TableRow>))}
             </TableBody>
           </Table>

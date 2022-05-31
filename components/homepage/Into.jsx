@@ -41,7 +41,7 @@ const Intro = ({session}) => {
             </div>
             <div className="mt-12">
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.<br></br> <div className='lg:mt-0 mt-3'> Minima quam repellat laborum aperiam natus repudiandae!</div>
+                    Get your Covid Test result within 15 Seconds.<br></br> <div className='lg:mt-0 mt-3'> A fast Covid Detection Service upto 91% Accurate.</div>
                 </p>
             </div>
         </div>

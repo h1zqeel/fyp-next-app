@@ -12,13 +12,14 @@ import axios from 'axios';
 
 const Individual = ({session}) => {
     const [patientName, setPatientName] = useState('');
-    const [date, setDate] = useState(0)
+    const [date, setDate] = useState(Date.now())
     const [remainingTests, setRemainingTests] = useState(0);
     const [loadingTests, setLoadingTests] = useState(0);
     const [uploadedFileName, setUploadedFileName] = useState(null);
     const [testFile, setTestFile] = useState(null);
     const [gettingResult, setGettingResult] = useState(false);
     const [testResult, setTestResult] = useState('');
+    const [testResultLink, setTestResultLink] = useState(null);
     const setFile = (e) => {
       if(e.target){
         setUploadedFileName(e.target.files[0].name);
@@ -38,13 +39,26 @@ const Individual = ({session}) => {
               'Content-Type': 'multipart/form-data',
             }
           })
-        .then(function (response) {
+        .then(async function (response) {
           console.log(response.data);
           setGettingResult(false);
           setUploadedFileName(null);
           setTestFile(null);
           setTestResult(response.data);
+          await axios.post('/api/test/take',
+          {email:session.user.email, testResult: response.data, patientName, dob: date, hospital: false},
+          {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }).then(function (response){
+            setRemainingTests(response.data.remainingTests);
+            setTestResultLink(response.data.id);
+          })
      })
+      } else {
+        alert('Image or Patient Name is Missing please Check')
       }
     }
     useEffect(async ()=>{
@@ -68,13 +82,16 @@ const Individual = ({session}) => {
     },[])
 return testResult.length?  (<div><Layout session={session}>
   <div className='page'>
-    Patient Name: {patientName}
+    <b>Patient Name:</b> {patientName}
     <br></br>
-    Test Result: {testResult!=='No Covid'?'Positive':'Negative'}
+    <b>Test Result:</b> {testResult!=='No Covid'?'Positive':'Negative'}
     <br></br>
-    {testResult!=='No Covid'?'Severity: '+testResult:''}
+    <div><b>Severity: </b>{testResult!=='No Covid'?testResult:'N-A'} </div> 
+    
     <br />
     <Button variant="outlined" onClick={()=>setTestResult('')}>Take Another</Button>
+
+    <div className='mt-5'>Your Result was saved and Can be Viewed at: <a href={'https://detectcovid.tech/result/individual/'+testResultLink} className='text-blue-500'>here</a></div>
   </div>
   </Layout></div>): (
     <Layout session={session}>
@@ -109,7 +126,7 @@ return testResult.length?  (<div><Layout session={session}>
             </Button>
         </div>
         <div className="mt-5">
-            {gettingResult?<CircularProgress /> : <Button variant="outlined" onClick={getResults} disabled={loadingTests&&remainingTests>0?true:false}>Get Results</Button>}
+            {gettingResult?<CircularProgress /> : <Button variant="outlined" onClick={getResults} disabled={remainingTests<=0||loadingTests?true:false}>Get Results</Button>}
         </div>
       </div>
 
